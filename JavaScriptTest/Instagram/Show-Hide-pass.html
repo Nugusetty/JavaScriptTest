@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Show & Hide password</title>
+  </head>
+  <body>
+    <center>
+      <input type="password" id="field" placeholder="Enter Password" />
+      <button id="toggle">Show</button>
+    </center>
+    <script>
+      let toggle = document.getElementById("toggle");
+      let field = document.getElementById("field");
+
+      toggle.addEventListener("click", () => {
+        if (field.type === "password") {
+          toggle.innerText = "Hide";
+          field.type = "text";
+        } else { 
+          toggle.innerText = "Show";
+          field.type = "password";
+        }
+      });
+    </script>
+  </body>
+</html>

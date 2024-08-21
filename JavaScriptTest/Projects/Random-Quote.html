@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Quote Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+      }
+      .quote-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+      }
+      .quote {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      .author {
+        font-size: 18px;
+        color: #555;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quote-container">
+      <div id="quote" class="quote">Click the button to get a quote.</div>
+      <div id="author" class="author"></div>
+      <button onclick="newQuote()">New Quote</button>
+    </div>
+
+    <script>
+      // script.js
+
+      const quotes = [
+        {
+          text: "The only way to do great work is to love what you do.",
+          author: "Steve Jobs",
+        },
+        {
+          text: "Life is what happens when you're busy making other plans.",
+          author: "John Lennon",
+        },
+        {
+          text: "The purpose of our lives is to be happy.",
+          author: "Dalai Lama",
+        },
+        {
+          text: "Get busy living or get busy dying.",
+          author: "Stephen King",
+        },
+        {
+          text: "You have within you right now, everything you need to deal with whatever the world can throw at you.",
+          author: "Brian Tracy",
+        },
+      ];
+
+      function newQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        const quote = quotes[randomIndex];
+
+        document.getElementById("quote").textContent = `"${quote.text}"`;
+        document.getElementById("author").textContent = `— ${quote.author}`;
+      }
+
+      // Display a new quote when the page loads
+      newQuote();
+    </script>
+  </body>
+</html>

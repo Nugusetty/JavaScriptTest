@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Finder</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #results {
+        margin-top: 20px;
+      }
+      .recipe {
+        margin-bottom: 20px;
+      }
+      .recipe img {
+        max-width: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Recipe Finder</h1>
+    <input type="text" id="query" placeholder="Search for recipes" />
+    <button id="search">Search</button>
+    <div id="results"></div>
+
+    <script>
+      document.getElementById("search").addEventListener("click", () => {
+        const query = document.getElementById("query").value;
+        searchRecipes(query);
+      });
+      function searchRecipes(query) {
+        const appId = "YOUR_EDAMAM_APP_ID"; // Replace with your actual App ID
+        const appKey = "YOUR_EDAMAM_APP_KEY"; // Replace with your actual App Key
+        const url = `https://api.edamam.com/search?q=${encodeURIComponent(
+          query
+        )}&app_id=${appId}&app_key=${appKey}`;
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            displayResults(data.hits);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+      function displayResults(recipes) {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+        if (!recipes || recipes.length === 0) {
+          resultsDiv.innerHTML = "No recipes found.";
+          return;
+        }
+        recipes.forEach((item) => {
+          const recipe = item.recipe;
+          const recipeElement = document.createElement("div");
+          recipeElement.className = "recipe";
+          const title = recipe.label || "No title available";
+          const ingredients = recipe.ingredientLines.join(", ");
+          const image = recipe.image || "https://via.placeholder.com/150x150";
+          recipeElement.innerHTML = `
+            <h2>${title}</h2>
+            <p><strong>Ingredients:</strong> ${ingredients}</p>
+            <img src="${image}" alt="${title}">
+        `;
+          resultsDiv.appendChild(recipeElement);
+        });
+      }
+    </script>
+  </body>
+</html>

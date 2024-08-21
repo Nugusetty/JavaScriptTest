@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotate Element</title>
+    <style>
+      #rotate {
+        height: 50px;
+        width: 50px;
+        border: 5px solid;
+        border-color: green blue;
+        transition: transform 0.3s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rotate"></div>
+    <script>
+      const element = document.getElementById("rotate");
+      let angle = 0;
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          angle -= 45;
+        } else if (event.key === "ArrowRight") {
+          angle += 45;
+        }
+        element.style.transform = `rotate(${angle}deg)`;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memory Card Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        margin: 0;
+      }
+      .game-board {
+        display: grid;
+        grid-template-columns: repeat(4, 100px);
+        grid-gap: 10px;
+        margin: 20px;
+      }
+      .card {
+        width: 100px;
+        height: 100px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        position: relative;
+      }
+      .card.flipped {
+        background-color: #f9f9f9;
+      }
+      .card img {
+        display: none;
+        width: 80px;
+        height: 80px;
+      }
+      .card.flipped img {
+        display: block;
+      }
+      .card.matched {
+        background-color: #d4edda;
+        cursor: default;
+      }
+      .message {
+        text-align: center;
+        margin: 20px;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="message" id="message">Find the matching pairs!</div>
+    <div class="game-board" id="game-board">
+      <!-- Cards will be injected here by JavaScript -->
+    </div>
+
+    <script>
+      // script.js
+
+      const cards = [
+        { id: 1, image: "🍎" },
+        { id: 1, image: "🍎" },
+        { id: 2, image: "🍌" },
+        { id: 2, image: "🍌" },
+        { id: 3, image: "🍒" },
+        { id: 3, image: "🍒" },
+        { id: 4, image: "🍇" },
+        { id: 4, image: "🍇" },
+        { id: 5, image: "🍉" },
+        { id: 5, image: "🍉" },
+        { id: 6, image: "🍓" },
+        { id: 6, image: "🍓" },
+        { id: 7, image: "🍍" },
+        { id: 7, image: "🍍" },
+        { id: 8, image: "🍑" },
+        { id: 8, image: "🍑" },
+      ];
+      let flippedCards = [];
+      let matchedCards = 0;
+      const totalPairs = cards.length / 2;
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+      function createBoard() {
+        shuffle(cards);
+        const board = document.getElementById("game-board");
+        board.innerHTML = "";
+        cards.forEach((card, index) => {
+          const cardElement = document.createElement("div");
+          cardElement.className = "card";
+          cardElement.dataset.id = card.id;
+          const cardContent = document.createElement("div");
+          cardContent.innerHTML = card.image;
+          cardContent.style.display = "none";
+          cardElement.appendChild(cardContent);
+          cardElement.addEventListener("click", () => flipCard(cardElement));
+          board.appendChild(cardElement);
+        });
+      }
+      function flipCard(cardElement) {
+        if (
+          flippedCards.length === 2 ||
+          cardElement.classList.contains("flipped") ||
+          cardElement.classList.contains("matched")
+        ) {
+          return;
+        }
+        cardElement.classList.add("flipped");
+        cardElement.firstChild.style.display = "block";
+        flippedCards.push(cardElement);
+        if (flippedCards.length === 2) {
+          checkMatch();
+        }
+      }
+      function checkMatch() {
+        const [card1, card2] = flippedCards;
+        const id1 = card1.dataset.id;
+        const id2 = card2.dataset.id;
+        if (id1 === id2) {
+          card1.classList.add("matched");
+          card2.classList.add("matched");
+          matchedCards++;
+          if (matchedCards === totalPairs) {
+            document.getElementById("message").textContent =
+              "Congratulations! You found all pairs!";
+          }
+        } else {
+          setTimeout(() => {
+            card1.classList.remove("flipped");
+            card2.classList.remove("flipped");
+            card1.firstChild.style.display = "none";
+            card2.firstChild.style.display = "none";
+          }, 1000);
+        }
+        flippedCards = [];
+      }
+      // Initialize the game
+      createBoard();
+    </script>
+  </body>
+</html>

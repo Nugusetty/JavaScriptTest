@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rolling Text</title>
+    <style>
+      #container {
+        margin: 50px;
+        font-size: 30px;
+      }
+      #text-container {
+        display: inline-block;
+        font-weight: 600;
+        transition: transform 1s linear;
+      }
+      #text-container > span {
+        display: block;
+        opacity: 0.3;
+        scale: 0.8;
+        transition: 1s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <span>I am</span>
+      <div id="text-container">
+        <div class="text">DailyCoding</div>
+        <div class="text">Tim</div>
+        <div class="text">a programmer</div>
+        <div class="text">a Developer</div>
+      </div>
+    </div>
+    <script>
+      let textcontainer = document.getElementById("text-container");
+      let textElements = document.querySelectorAll(".text");
+      let currentElement = textElements.length - 1;
+
+      setInterval(() => {
+        textElements.forEach((element) => {
+          if (textElements.item(currentElement) === element) {
+            element.style.opacity = 1;
+            element.style.scale = 0.8;
+          }
+        });
+        textcontainer.style.transform = `translateY(calc)${
+          textElements.length - 1 - currentElement
+        }*34px))`;
+        currentElement == 0
+          ? (currentElement = textElements.length - 1)
+          : (currentElement -= 1);
+      }, 1100);
+    </script>
+  </body>
+</html>

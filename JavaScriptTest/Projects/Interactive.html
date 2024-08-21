@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Quiz</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+      }
+      .quiz-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .question {
+        margin-bottom: 15px;
+      }
+      .feedback {
+        margin-top: 10px;
+        font-size: 16px;
+        text-align: center;
+      }
+      .feedback.correct {
+        color: #4caf50;
+      }
+      .feedback.incorrect {
+        color: #f44336;
+      }
+      .option {
+        display: block;
+        margin: 5px 0;
+        cursor: pointer;
+        padding: 10px;
+        background-color: #eee;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      .option:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <h1>Quiz</h1>
+      <div id="quiz">
+        <!-- Quiz questions will be injected here by JavaScript -->
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+      // script.js
+
+      const quizData = [
+        {
+          question: "What is the capital of France?",
+          options: ["Berlin", "Madrid", "Paris", "Rome"],
+          answer: "Paris",
+        },
+        {
+          question: "What is 2 + 2?",
+          options: ["3", "4", "5", "6"],
+          answer: "4",
+        },
+        {
+          question: "What is the largest planet in our solar system?",
+          options: ["Earth", "Jupiter", "Mars", "Saturn"],
+          answer: "Jupiter",
+        },
+      ];
+
+      function loadQuiz() {
+        const quizContainer = document.getElementById("quiz");
+        quizContainer.innerHTML = "";
+
+        quizData.forEach((quizItem, index) => {
+          const questionElement = document.createElement("div");
+          questionElement.className = "question";
+
+          const questionText = document.createElement("div");
+          questionText.textContent = `${index + 1}. ${quizItem.question}`;
+          questionElement.appendChild(questionText);
+
+          quizItem.options.forEach((option) => {
+            const optionElement = document.createElement("div");
+            optionElement.className = "option";
+            optionElement.textContent = option;
+            optionElement.addEventListener("click", () =>
+              checkAnswer(option, quizItem.answer)
+            );
+            questionElement.appendChild(optionElement);
+          });
+
+          quizContainer.appendChild(questionElement);
+        });
+      }
+
+      function checkAnswer(selectedOption, correctAnswer) {
+        const feedbackElement = document.getElementById("feedback");
+
+        if (selectedOption === correctAnswer) {
+          feedbackElement.textContent = "Correct!";
+          feedbackElement.className = "feedback correct";
+        } else {
+          feedbackElement.textContent =
+            "Incorrect! The correct answer is " + correctAnswer + ".";
+          feedbackElement.className = "feedback incorrect";
+        }
+      }
+
+      // Load the quiz when the page loads
+      loadQuiz();
+    </script>
+  </body>
+</html>

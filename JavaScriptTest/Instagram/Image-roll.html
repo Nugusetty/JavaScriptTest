@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Gallery</title>
+    <style>
+      #container {
+        position: relative;
+      }
+      .Gallery {
+        opacity: 0;
+        height: 300px;
+        width: 500px;
+        position: absolute;
+        transition: 1s;
+      }
+      #container > img:first-child {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <img src="../image/code1.avif" class="Gallery" />
+      <img src="../image/code2.avif" class="Gallery" />
+      <img src="../image/code3.jpeg" class="Gallery" />
+      <img src="../image/code4.avif" class="Gallery" />
+      <img src="../image/code5.avif" class="Gallery" />
+    </div>
+    <script>
+      let element = document.getElementsByClassName("Gallery");
+      let order = 0;
+
+      setInterval(() => {
+        element.item(order).style.opacity = "0";
+        order + 1 == element.length ? (order = 0) : (order += 1);
+        element.item(order).style.opacity = "1";
+      }, 2000);
+    </script>
+  </body>
+</html>

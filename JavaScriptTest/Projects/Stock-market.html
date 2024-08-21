@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Market Tracker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+      }
+      .stock {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .stock h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Stock Market Tracker</h1>
+
+      <!-- Form to add a stock symbol -->
+      <div>
+        <input
+          type="text"
+          id="stock-symbol"
+          placeholder="Enter stock symbol (e.g., AAPL)"
+        />
+        <button onclick="addStock()">Add Stock</button>
+      </div>
+
+      <hr />
+
+      <!-- Display tracked stocks -->
+      <div id="stocks-container"></div>
+    </div>
+
+    <script>
+      const apiKey = "YOUR_ALPHA_VANTAGE_API_KEY"; // Replace with your Alpha Vantage API key
+      let trackedStocks =
+        JSON.parse(localStorage.getItem("trackedStocks")) || [];
+      // Load stocks when the page loads
+      window.onload = function () {
+        loadStocks();
+      };
+      // Function to add a new stock symbol
+      function addStock() {
+        const symbol = document
+          .getElementById("stock-symbol")
+          .value.trim()
+          .toUpperCase();
+        if (!symbol) {
+          alert("Please enter a stock symbol.");
+          return;
+        }
+        if (!trackedStocks.includes(symbol)) {
+          trackedStocks.push(symbol);
+          localStorage.setItem("trackedStocks", JSON.stringify(trackedStocks));
+          fetchStockData(symbol);
+        } else {
+          alert("Stock is already being tracked.");
+        }
+        document.getElementById("stock-symbol").value = "";
+      }
+      // Function to fetch and display stock data
+      function fetchStockData(symbol) {
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apiKey}`;
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data["Error Message"]) {
+              alert(
+                "Error fetching data. Please check the stock symbol and try again."
+              );
+              return;
+            }
+            const timeSeries = data["Time Series (5min)"];
+            const latestTime = Object.keys(timeSeries)[0];
+            const latestData = timeSeries[latestTime];
+            displayStock({
+              symbol,
+              price: latestData["1. open"],
+              time: latestTime,
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching stock data:", error);
+          });
+      }
+      // Function to display stock data
+      function displayStock(stock) {
+        const stocksContainer = document.getElementById("stocks-container");
+        const stockElement = document.createElement("div");
+        stockElement.className = "stock";
+        stockElement.innerHTML = `
+        <h2>${stock.symbol}</h2>
+        <p>Price: $${parseFloat(stock.price).toFixed(2)}</p>
+        <p>Last Updated: ${new Date(stock.time).toLocaleString()}</p>
+    `;
+        stocksContainer.appendChild(stockElement);
+      }
+      // Function to load tracked stocks
+      function loadStocks() {
+        trackedStocks.forEach((symbol) => fetchStockData(symbol));
+      }
+    </script>
+  </body>
+</html>

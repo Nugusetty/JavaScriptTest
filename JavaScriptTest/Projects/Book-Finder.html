@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Finder</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #results {
+        margin-top: 20px;
+      }
+      .book {
+        margin-bottom: 20px;
+      }
+      .book img {
+        max-width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1>Book Finder</h1>
+      <input type="text" id="query" placeholder="Search for books" />
+      <button id="search">Search</button>
+      <div id="results"></div>
+    </center>
+    <script>
+      document.getElementById("search").addEventListener("click", () => {
+        const query = document.getElementById("query").value;
+        searchBooks(query);
+      });
+      function searchBooks(query) {
+        const apiKey = "YOUR_GOOGLE_BOOKS_API_KEY"; // Replace with your actual API key
+        const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+          query
+        )}&key=${apiKey}`;
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            displayResults(data.items);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+      function displayResults(books) {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+        if (!books) {
+          resultsDiv.innerHTML = "No books found.";
+          return;
+        }
+        books.forEach((book) => {
+          const bookInfo = book.volumeInfo;
+          const bookElement = document.createElement("div");
+          bookElement.className = "book";
+          const title = bookInfo.title || "No title available";
+          const authors = bookInfo.authors
+            ? bookInfo.authors.join(", ")
+            : "No authors available";
+          const thumbnail = bookInfo.imageLinks
+            ? bookInfo.imageLinks.thumbnail
+            : "https://via.placeholder.com/100x150";
+          bookElement.innerHTML = `
+            <h2>${title}</h2>
+            <p><strong>Authors:</strong> ${authors}</p>
+            <img src="${thumbnail}" alt="${title}">
+        `;
+          resultsDiv.appendChild(bookElement);
+        });
+      }
+    </script>
+  </body>
+</html>

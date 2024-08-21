@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Commerce Cart</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        max-width: 1200px;
+      }
+      .product-list,
+      .cart {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 45%;
+      }
+      h1,
+      h2 {
+        margin-bottom: 20px;
+      }
+      .product,
+      .cart-item {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .product button,
+      .cart-item button {
+        padding: 5px 10px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .product button:hover,
+      .cart-item button:hover {
+        background-color: #0056b3;
+      }
+      .cart-item input {
+        width: 50px;
+        text-align: center;
+      }
+      .total {
+        margin-top: 20px;
+        font-size: 18px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="product-list">
+        <h1>Products</h1>
+        <div id="products">
+          <!-- Products will be injected here by JavaScript -->
+        </div>
+      </div>
+      <div class="cart">
+        <h2>Your Cart</h2>
+        <div id="cart">
+          <!-- Cart items will be injected here by JavaScript -->
+        </div>
+        <div class="total" id="total">Total: $0.00</div>
+      </div>
+    </div>
+
+    <script>
+      // script.js
+
+      const products = [
+        { id: 1, name: "Product 1", price: 10 },
+        { id: 2, name: "Product 2", price: 20 },
+        { id: 3, name: "Product 3", price: 30 },
+      ];
+      const cart = {};
+      function displayProducts() {
+        const productsDiv = document.getElementById("products");
+        productsDiv.innerHTML = "";
+        products.forEach((product) => {
+          const productDiv = document.createElement("div");
+          productDiv.className = "product";
+          productDiv.innerHTML = `
+            <span>${product.name} - $${product.price.toFixed(2)}</span>
+            <button onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+          productsDiv.appendChild(productDiv);
+        });
+      }
+      function displayCart() {
+        const cartDiv = document.getElementById("cart");
+        const totalDiv = document.getElementById("total");
+        cartDiv.innerHTML = "";
+        let total = 0;
+        for (const id in cart) {
+          const product = products.find((p) => p.id == id);
+          const quantity = cart[id];
+          const itemTotal = product.price * quantity;
+          total += itemTotal;
+          const cartItemDiv = document.createElement("div");
+          cartItemDiv.className = "cart-item";
+          cartItemDiv.innerHTML = `
+            <span>${product.name} - $${product.price.toFixed(
+            2
+          )} x ${quantity}</span>
+            <input type="number" value="${quantity}" min="1" onchange="updateQuantity(${
+            product.id
+          }, this.value)">
+            <button onclick="removeFromCart(${product.id})">Remove</button>
+        `;
+          cartDiv.appendChild(cartItemDiv);
+        }
+        totalDiv.textContent = `Total: $${total.toFixed(2)}`;
+      }
+      function addToCart(productId) {
+        if (cart[productId]) {
+          cart[productId]++;
+        } else {
+          cart[productId] = 1;
+        }
+        displayCart();
+      }
+      function removeFromCart(productId) {
+        delete cart[productId];
+        displayCart();
+      }
+      function updateQuantity(productId, quantity) {
+        if (quantity <= 0) {
+          removeFromCart(productId);
+        } else {
+          cart[productId] = parseInt(quantity);
+          displayCart();
+        }
+      }
+      // Initialize the app
+      displayProducts();
+      displayCart();
+    </script>
+  </body>
+</html>

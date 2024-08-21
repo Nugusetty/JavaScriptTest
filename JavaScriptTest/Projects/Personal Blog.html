@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Blog</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+      }
+      .post {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .post h2 {
+        margin-top: 0;
+      }
+      .comment {
+        margin-left: 20px;
+        padding-left: 10px;
+        border-left: 2px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>My Blog</h1>
+
+      <!-- Form to create a new post -->
+      <div>
+        <h2>New Post</h2>
+        <input type="text" id="post-title" placeholder="Title" /><br /><br />
+        <textarea
+          id="post-content"
+          placeholder="Write your post here..."
+          rows="5"
+        ></textarea
+        ><br /><br />
+        <button onclick="createPost()">Create Post</button>
+      </div>
+      <hr />
+      <!-- Display posts -->
+      <div id="posts-container"></div>
+    </div>
+
+    <script>
+      // Load posts when the page loads
+      window.onload = function () {
+        loadPosts();
+      };
+      // Function to create a new post
+      function createPost() {
+        const title = document.getElementById("post-title").value.trim();
+        const content = document.getElementById("post-content").value.trim();
+        if (!title || !content) {
+          alert("Please fill in both the title and content.");
+          return;
+        }
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+        const newPost = {
+          id: Date.now(),
+          title,
+          content,
+          comments: [],
+        };
+        posts.push(newPost);
+        localStorage.setItem("posts", JSON.stringify(posts));
+        document.getElementById("post-title").value = "";
+        document.getElementById("post-content").value = "";
+        loadPosts();
+      }
+      // Function to load all posts
+      function loadPosts() {
+        const postsContainer = document.getElementById("posts-container");
+        postsContainer.innerHTML = "";
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+        posts.forEach((post) => {
+          const postElement = document.createElement("div");
+          postElement.className = "post";
+          postElement.innerHTML = `
+            <h2>${post.title}</h2>
+            <p>${post.content}</p>
+            <div>
+                <h3>Comments</h3>
+                <div id="comments-${post.id}">
+                    ${post.comments
+                      .map((comment) => `<div class="comment">${comment}</div>`)
+                      .join("")}
+                </div>
+                <textarea id="comment-input-${
+                  post.id
+                }" placeholder="Write a comment..." rows="2"></textarea><br>
+                <button onclick="addComment(${post.id})">Add Comment</button>
+            </div>
+        `;
+          postsContainer.appendChild(postElement);
+        });
+      }
+      // Function to add a comment to a post
+      function addComment(postId) {
+        const commentInput = document.getElementById(`comment-input-${postId}`);
+        const commentText = commentInput.value.trim();
+        if (!commentText) {
+          alert("Please write a comment.");
+          return;
+        }
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+        const post = posts.find((p) => p.id === postId);
+        post.comments.push(commentText);
+        localStorage.setItem("posts", JSON.stringify(posts));
+        commentInput.value = "";
+        loadPosts();
+      }
+    </script>
+  </body>
+</html>

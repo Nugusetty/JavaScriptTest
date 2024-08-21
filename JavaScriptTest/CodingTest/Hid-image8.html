@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hide Image on Hover</title>
+  </head>
+  <body>
+    <img
+      id="myImage"
+      src="../image/A.P.J.jpg"
+      alt="Sample Image"
+      width="300"
+      height="200"
+    />
+    <button onmouseover="test()">Hide</button>
+    <script>
+      function test() {
+        document.getElementById("myImage").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

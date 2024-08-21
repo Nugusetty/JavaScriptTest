@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Suggestions</title>
+    <style>
+      label {
+        position: relative;
+        margin: 10px;
+      }
+      input,
+      span {
+        appearance: none;
+        position: absolute;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
+      }
+      span {
+        color: rgba(205, 186, 186, 0.4);
+        text-indent: 0.18em;
+        top: 0.13em;
+      }
+    </style>
+  </head>
+  <body>
+    <label for="text">
+      <input type="search" id="text" />
+      <span id="overlay"></span>
+    </label>
+    <script>
+      const words = [
+        "DailyCoding",
+        "Tim",
+        "Frontend",
+        "Developer",
+        "HariKumar",
+        "JavaScript",
+        "ReactJs",
+      ];
+      const input = document.getElementById("text");
+      const overlay = document.getElementById("overlay");
+
+      input.addEventListener("input", () => {
+        let isChanged = words.some((word) => {
+          if (input.value.length !== 0 && word.startsWith(input.value)) {
+            overlay.innerText = word;
+            return true;
+          }
+        });
+        if (!isChanged) overlay.innerText = "";
+      });
+    </script>
+  </body>
+</html>

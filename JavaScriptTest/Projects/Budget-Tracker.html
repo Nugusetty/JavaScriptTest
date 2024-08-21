@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Tracker</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    #form {
+      margin-bottom: 20px;
+    }
+    input {
+      margin-right: 10px;
+    }
+    button {
+      padding: 5px 10px;
+    }
+    #summary {
+      margin-bottom: 20px;
+    }
+    #entries ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    #entries li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+  <body>
+    <h1>Budget Tracker</h1>
+    <div id="form">
+      <input type="text" id="description" placeholder="Description" />
+      <input type="number" id="amount" placeholder="Amount" />
+      <button id="add">Add</button>
+    </div>
+    <div id="summary">
+      <h2>Summary</h2>
+      <p><strong>Total Income:</strong> $<span id="total-income">0</span></p>
+      <p>
+        <strong>Total Expenses:</strong> $<span id="total-expenses">0</span>
+      </p>
+      <p><strong>Balance:</strong> $<span id="balance">0</span></p>
+    </div>
+    <div id="entries">
+      <h2>Entries</h2>
+      <ul id="entry-list"></ul>
+    </div>
+
+    <script>
+      document.getElementById("add").addEventListener("click", () => {
+        const description = document.getElementById("description").value;
+        const amount = parseFloat(document.getElementById("amount").value);
+        if (description && !isNaN(amount)) {
+          addEntry(description, amount);
+          document.getElementById("description").value = "";
+          document.getElementById("amount").value = "";
+        } else {
+          alert("Please enter a valid description and amount.");
+        }
+      });
+      let totalIncome = 0;
+      let totalExpenses = 0;
+      function addEntry(description, amount) {
+        const entryList = document.getElementById("entry-list");
+        const entryElement = document.createElement("li");
+        const entryType = amount >= 0 ? "income" : "expense";
+        const formattedAmount = Math.abs(amount).toFixed(2);
+        entryElement.innerHTML = `${description}: $${formattedAmount} (${entryType})`;
+        entryList.appendChild(entryElement);
+        if (entryType === "income") {
+          totalIncome += amount;
+        } else {
+          totalExpenses += Math.abs(amount);
+        }
+        updateSummary();
+      }
+      function updateSummary() {
+        const balance = totalIncome - totalExpenses;
+        document.getElementById("total-income").textContent =
+          totalIncome.toFixed(2);
+        document.getElementById("total-expenses").textContent =
+          totalExpenses.toFixed(2);
+        document.getElementById("balance").textContent = balance.toFixed(2);
+      }
+    </script>
+  </body>
+</html>

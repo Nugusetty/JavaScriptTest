@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #controls {
+      margin-top: 20px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+  <body>
+    <h1>Music Player</h1>
+    <audio id="audio" src="your-audio-file.mp3"></audio>
+    <div id="controls">
+      <button id="play">Play</button>
+      <button id="pause">Pause</button>
+      <button id="rewind">Rewind 10s</button>
+      <button id="forward">Forward 10s</button>
+      <div id="time">
+        <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+      </div>
+    </div>
+
+    <script>
+      const audio = document.getElementById("audio");
+      const playButton = document.getElementById("play");
+      const pauseButton = document.getElementById("pause");
+      const rewindButton = document.getElementById("rewind");
+      const forwardButton = document.getElementById("forward");
+      const currentTimeDisplay = document.getElementById("current-time");
+      const durationDisplay = document.getElementById("duration");
+      playButton.addEventListener("click", () => {
+        audio.play();
+      });
+      pauseButton.addEventListener("click", () => {
+        audio.pause();
+      });
+      rewindButton.addEventListener("click", () => {
+        audio.currentTime -= 10; // Rewind 10 seconds
+      });
+      forwardButton.addEventListener("click", () => {
+        audio.currentTime += 10; // Forward 10 seconds
+      });
+      audio.addEventListener("timeupdate", () => {
+        updateTimeDisplays();
+      });
+      function updateTimeDisplays() {
+        const currentTime = formatTime(audio.currentTime);
+        const duration = formatTime(audio.duration);
+        currentTimeDisplay.textContent = currentTime;
+        durationDisplay.textContent = duration;
+      }
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+      }
+      // Initialize duration display once metadata is loaded
+      audio.addEventListener("loadedmetadata", () => {
+        updateTimeDisplays();
+      });
+    </script>
+  </body>
+</html>

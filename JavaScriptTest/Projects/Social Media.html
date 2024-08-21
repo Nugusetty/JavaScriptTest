@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Media Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: auto;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .card h2 {
+        margin-top: 0;
+      }
+      .card p {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Social Media Dashboard</h1>
+
+      <div class="card" id="twitter-stats">
+        <h2>Twitter Statistics</h2>
+        <p>Followers: <span id="twitter-followers">Loading...</span></p>
+        <p>Tweets: <span id="twitter-tweets">Loading...</span></p>
+      </div>
+
+      <div class="card" id="facebook-stats">
+        <h2>Facebook Statistics</h2>
+        <p>Likes: <span id="facebook-likes">Loading...</span></p>
+        <p>Posts: <span id="facebook-posts">Loading...</span></p>
+      </div>
+    </div>
+
+    <script>
+      // Dummy API URLs (Replace with real API endpoints)
+      const twitterAPI = "https://api.example.com/twitter";
+      const facebookAPI = "https://api.example.com/facebook";
+
+      // Dummy API keys (Replace with real API keys)
+      const twitterAPIKey = "YOUR_TWITTER_API_KEY";
+      const facebookAPIKey = "YOUR_FACEBOOK_API_KEY";
+      function fetchTwitterData() {
+        fetch(twitterAPI, {
+          headers: {
+            Authorization: `Bearer ${twitterAPIKey}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("twitter-followers").textContent =
+              data.followers;
+            document.getElementById("twitter-tweets").textContent = data.tweets;
+          })
+          .catch((error) => {
+            console.error("Error fetching Twitter data:", error);
+          });
+      }
+      function fetchFacebookData() {
+        fetch(facebookAPI, {
+          headers: {
+            Authorization: `Bearer ${facebookAPIKey}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("facebook-likes").textContent = data.likes;
+            document.getElementById("facebook-posts").textContent = data.posts;
+          })
+          .catch((error) => {
+            console.error("Error fetching Facebook data:", error);
+          });
+      }
+      // Fetch data when the page loads
+      window.onload = function () {
+        fetchTwitterData();
+        fetchFacebookData();
+      };
+    </script>
+  </body>
+</html>

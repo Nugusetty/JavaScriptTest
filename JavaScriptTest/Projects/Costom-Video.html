@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Video Player</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+      }
+      video {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      #controls {
+        margin-top: 20px;
+      }
+      button {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+      input[type="range"] {
+        margin: 0 5px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Custom Video Player</h1>
+    <video id="video" width="800" controls>
+      <source
+        src="https://youtu.be/6ySVdeNFP0M?si=w60hYdT8NgT68lGQ&t=45"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+    <div id="controls">
+      <button id="play">Play</button>
+      <button id="pause">Pause</button>
+      <button id="rewind">Rewind 10s</button>
+      <button id="forward">Forward 10s</button>
+      <button id="mute">Mute</button>
+      <button id="unmute">Unmute</button>
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="1" />
+      <div id="time">
+        <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+      </div>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const playButton = document.getElementById("play");
+      const pauseButton = document.getElementById("pause");
+      const rewindButton = document.getElementById("rewind");
+      const forwardButton = document.getElementById("forward");
+      const muteButton = document.getElementById("mute");
+      const unmuteButton = document.getElementById("unmute");
+      const volumeSlider = document.getElementById("volume");
+      const currentTimeDisplay = document.getElementById("current-time");
+      const durationDisplay = document.getElementById("duration");
+      // Play button
+      playButton.addEventListener("click", () => {
+        video.play();
+      });
+      // Pause button
+      pauseButton.addEventListener("click", () => {
+        video.pause();
+      });
+      // Rewind button
+      rewindButton.addEventListener("click", () => {
+        video.currentTime -= 10; // Rewind 10 seconds
+      });
+      // Forward button
+      forwardButton.addEventListener("click", () => {
+        video.currentTime += 10; // Forward 10 seconds
+      });
+      // Mute button
+      muteButton.addEventListener("click", () => {
+        video.muted = true;
+      });
+      // Unmute button
+      unmuteButton.addEventListener("click", () => {
+        video.muted = false;
+      });
+      // Volume control
+      volumeSlider.addEventListener("input", () => {
+        video.volume = volumeSlider.value;
+      });
+      // Update time displays
+      video.addEventListener("timeupdate", () => {
+        updateTimeDisplays();
+      });
+      // Format time in minutes:seconds
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+      }
+      // Update time displays
+      function updateTimeDisplays() {
+        const currentTime = formatTime(video.currentTime);
+        const duration = formatTime(video.duration);
+        currentTimeDisplay.textContent = currentTime;
+        durationDisplay.textContent = duration;
+      }
+      // Initialize duration display once metadata is loaded
+      video.addEventListener("loadedmetadata", () => {
+        updateTimeDisplays();
+      });
+    </script>
+  </body>
+</html>

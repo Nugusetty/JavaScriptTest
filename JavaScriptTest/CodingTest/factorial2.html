@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculate factorial</title>
+  </head>
+  <body>
+    <script>
+      function factorial(n) {
+        let result = 1;
+        for (let i = 1; i <= n; i++) {
+          result *= i;
+        }
+        return result;
+      }
+
+      const factorialOf10 = factorial(10);
+      console.log(factorialOf10);
+    </script>
+  </body>
+</html>

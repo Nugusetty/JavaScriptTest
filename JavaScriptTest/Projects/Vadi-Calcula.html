@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Village Interest Calculator</title>
+    <style>
+      /* * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #1a73e8;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .form-group input[type="number"],
+      .form-group input[type="date"] {
+        width: calc(100% - 20px);
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .form-group input[type="radio"] {
+        margin-right: 10px;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #calculateBtn {
+        background-color: #1a73e8;
+        color: #fff;
+      }
+
+      #clearBtn {
+        background-color: #f44336;
+        color: #fff;
+      }
+
+      .result {
+        margin-top: 20px;
+        background-color: #eee;
+        padding: 15px;
+        border-radius: 4px;
+      } */
+    </style>
+  </head>
+  <body>
+    <center>
+      <div class="container">
+        <h2>Interest Calculations</h2>
+
+        <form id="interestForm">
+          <div class="form-group">
+            <label for="interestType">Interest Type</label>
+            <input
+              type="radio"
+              id="simpleInterest"
+              name="interestType"
+              value="simple"
+              checked
+            />
+            <label for="simpleInterest">Simple Interest</label>
+            <input
+              type="radio"
+              id="compoundInterest"
+              name="interestType"
+              value="compound"
+            />
+            <label for="compoundInterest">Compound Interest</label>
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Amount *</label>
+            <input
+              type="number"
+              id="amount"
+              placeholder="Enter amount"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="interestRate">Interest Rate is in</label>
+            <input
+              type="radio"
+              id="ratePerMonth"
+              name="rateType"
+              value="month"
+              checked
+            />
+            <label for="ratePerMonth">Rupee per month</label>
+            <input type="radio" id="ratePerYear" name="rateType" value="year" />
+            <label for="ratePerYear">Percent per annum</label>
+            <input
+              type="number"
+              id="interestRate"
+              placeholder="Enter interest rate"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="loanDurationType">Loan Duration Type</label>
+            <input
+              type="radio"
+              id="startEndDate"
+              name="durationType"
+              value="startEnd"
+              checked
+            />
+            <label for="startEndDate">Start and End Date</label>
+            <input
+              type="radio"
+              id="timePeriod"
+              name="durationType"
+              value="period"
+            />
+            <label for="timePeriod">Time Period</label>
+          </div>
+
+          <div class="form-group date-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" required />
+          </div>
+
+          <div class="form-group date-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" required />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="calculateBtn">Calculate</button>
+            <button type="reset" id="clearBtn">Clear</button>
+          </div>
+        </form>
+
+        <div id="result" class="result"></div>
+      </div>
+    </center>
+    <script>
+      document
+        .getElementById("calculateBtn")
+        .addEventListener("click", function () {
+          const principal = parseFloat(document.getElementById("amount").value);
+          const interestRate = parseFloat(
+            document.getElementById("interestRate").value
+          );
+          const startDate = new Date(
+            document.getElementById("startDate").value
+          );
+          const endDate = new Date(document.getElementById("endDate").value);
+
+          // Calculate loan duration in years, months, and days
+          const diffTime = Math.abs(endDate - startDate);
+          const durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          const years = Math.floor(durationDays / 365);
+          const remainingDays = durationDays % 365;
+          const months = Math.floor(remainingDays / 30);
+          const days = remainingDays % 30;
+
+          // Assuming interest rate is per month and calculating simple interest
+          const interestPer100 = interestRate;
+          const totalInterest =
+            ((principal * interestPer100) / 100) *
+            (years * 12 + months + days / 30);
+          const totalAmount = principal + totalInterest;
+
+          // Display the results
+          document.getElementById("result").innerHTML = `
+        <h3>Simple Interest Calculation</h3>
+        <p>Principal Amount: ${principal.toLocaleString()}</p>
+        <p>Loan Duration: ${years} Years ${months} Months ${days} Days</p>
+        <p>Interest Rate: ${interestPer100} rupees per 100 per month</p>
+        <p>Interest: ${totalInterest.toLocaleString()}</p>
+        <p>Total: ${totalAmount.toLocaleString()}</p>
+    `;
+        });
+    </script>
+  </body>
+</html>

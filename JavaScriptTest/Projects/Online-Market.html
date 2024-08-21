@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Marketplace</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+      }
+      .product {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .product h2 {
+        margin-top: 0;
+      }
+      .product img {
+        max-width: 100%;
+        height: auto;
+      }
+      .product button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+      }
+      .product button:hover {
+        background-color: #218838;
+      }
+      .cart-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      .cart-button:hover {
+        background-color: #0069d9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Online Marketplace</h1>
+
+      <!-- Form to add a new product -->
+      <div>
+        <h2>Add New Product</h2>
+        <input
+          type="text"
+          id="product-name"
+          placeholder="Product Name"
+        /><br /><br />
+        <input
+          type="number"
+          id="product-price"
+          placeholder="Product Price"
+        /><br /><br />
+        <input
+          type="url"
+          id="product-image"
+          placeholder="Product Image URL"
+        /><br /><br />
+        <textarea
+          id="product-description"
+          placeholder="Product Description"
+          rows="4"
+        ></textarea
+        ><br /><br />
+        <button onclick="addProduct()">Add Product</button>
+      </div>
+      <hr />
+      <!-- Display products -->
+      <h2>Products for Sale</h2>
+      <div id="products-container"></div>
+      <hr />
+      <!-- Shopping Cart -->
+      <h2>Shopping Cart</h2>
+      <button class="cart-button" onclick="viewCart()">View Cart</button>
+      <div id="cart-container"></div>
+    </div>
+
+    <script>
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      // Load products when the page loads
+      window.onload = function () {
+        loadProducts();
+        loadCart();
+      };
+      // Function to add a new product
+      function addProduct() {
+        const name = document.getElementById("product-name").value.trim();
+        const price = parseFloat(
+          document.getElementById("product-price").value.trim()
+        );
+        const imageUrl = document.getElementById("product-image").value.trim();
+        const description = document
+          .getElementById("product-description")
+          .value.trim();
+        if (!name || isNaN(price) || !imageUrl || !description) {
+          alert("Please fill in all fields.");
+          return;
+        }
+        const newProduct = {
+          id: Date.now(),
+          name,
+          price,
+          imageUrl,
+          description,
+        };
+        products.push(newProduct);
+        localStorage.setItem("products", JSON.stringify(products));
+        document.getElementById("product-name").value = "";
+        document.getElementById("product-price").value = "";
+        document.getElementById("product-image").value = "";
+        document.getElementById("product-description").value = "";
+        loadProducts();
+      }
+      // Function to load and display products
+      function loadProducts() {
+        const productsContainer = document.getElementById("products-container");
+        productsContainer.innerHTML = "";
+        products.forEach((product) => {
+          const productElement = document.createElement("div");
+          productElement.className = "product";
+          productElement.innerHTML = `
+            <h2>${product.name}</h2>
+            <img src="${product.imageUrl}" alt="${product.name}">
+            <p>${product.description}</p>
+            <p>Price: $${product.price.toFixed(2)}</p>
+            <button onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+          productsContainer.appendChild(productElement);
+        });
+      }
+      // Function to add a product to the cart
+      function addToCart(productId) {
+        const product = products.find((p) => p.id === productId);
+        if (product) {
+          cart.push(product);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          alert(`${product.name} has been added to your cart.`);
+        }
+      }
+      // Function to load and display the cart
+      function loadCart() {
+        const cartContainer = document.getElementById("cart-container");
+        cartContainer.innerHTML = "";
+        if (cart.length === 0) {
+          cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+        } else {
+          cart.forEach((product, index) => {
+            const cartItem = document.createElement("div");
+            cartItem.className = "product";
+            cartItem.innerHTML = `
+                <h2>${product.name}</h2>
+                <img src="${product.imageUrl}" alt="${product.name}">
+                <p>${product.description}</p>
+                <p>Price: $${product.price.toFixed(2)}</p>
+                <button onclick="removeFromCart(${index})">Remove from Cart</button>
+            `;
+            cartContainer.appendChild(cartItem);
+          });
+          const totalPrice = cart.reduce(
+            (total, product) => total + product.price,
+            0
+          );
+          const totalElement = document.createElement("p");
+          totalElement.innerHTML = `<strong>Total Price: $${totalPrice.toFixed(
+            2
+          )}</strong>`;
+          cartContainer.appendChild(totalElement);
+        }
+      }
+      // Function to remove a product from the cart
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        loadCart();
+      }
+      // Function to view the cart
+      function viewCart() {
+        loadCart();
+      }
+    </script>
+  </body>
+</html>

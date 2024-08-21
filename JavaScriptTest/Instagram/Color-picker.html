@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Picker</title>
+    <style>
+      input {
+        display: none;
+      }
+      #custom {
+        height: 50px;
+        width: 50px;
+        background: conic-gradient(
+          red,
+          orange,
+          yellow,
+          green,
+          blue,
+          indigo,
+          violet,
+          red
+        );
+        border-radius: 50%;
+        border: 2px solid lightgray;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <label id="custom" for="Picker">
+      <input id="Picker" type="color" />
+    </label>
+    <span id="current"> No color chosen </span>
+    <script>
+      let Picker = document.getElementById("Picker");
+      let custom = document.getElementById("custom");
+      let current = document.getElementById("current");
+
+      Picker.addEventListener("change", () => {
+        custom.style.background = Picker.value;
+        current.innerText = Picker.value;
+      });
+    </script>
+  </body>
+</html>

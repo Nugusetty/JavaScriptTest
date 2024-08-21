@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Year 2024</title>
+  </head>
+  <body>
+    <center>
+      <select id="Year"></select>
+    </center>
+    <script>
+      let Year = "<option> Year </option>";
+      for (let i = 2024; i >= 1970; i--) {
+        Year += "<option>" + i + "</option>";
+      }
+      document.getElementById("Year").innerHTML = Year;
+    </script>
+  </body>
+</html>
